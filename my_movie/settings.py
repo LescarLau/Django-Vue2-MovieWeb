@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "movies",
-    "rest_framework"
+    "rest_framework",
+    "django_filters",
+    "movielist",
+    "djoser",
+    "account"
 ]
 
 MIDDLEWARE = [
@@ -108,6 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = "zh-hans"
+LOCALE_PATHS=[
+    Path(BASE_DIR).joinpath('locale')
+]
 
 TIME_ZONE = "Asia/Shanghai"
 
@@ -126,7 +132,50 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# 添加分页功能
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE':12
+    'PAGE_SIZE':12,
+    # 'DEFAULT_FILTER_BACKENDS':{
+    #     'django_filters.rest_framework.DjangoFilterBackend',
+    # },
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
+
+# 配置jwt
+from datetime import timedelta
+SIMPLE_JWT = {
+   'AUTH_HEADER_TYPES': ('JWT',),
+   'ACCESS_TOKEN_LIFETIME':timedelta(minutes=5),  #设置访问令牌的生命周期
+   'REFRESH_TOKEN_LIFETIME':timedelta(days=1),  #设置刷新令牌的生命周期
+}
+
+# 邮箱服务配置
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = '243763076@qq.com'
+EMAIL_HOST_PASSWORD = 'neusrleojnqwbhaj'
+EMAIL_USE_SSL=True
+# EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL = '243763076@qq.com'
+
+# djoser配置
+DJOSER = {
+    'USER_ID_FIELD':'username',
+    'LOGIN_FIELD':'email',
+    'SEND_ACTIVATION_EMAIL':True,
+    'ACTIVATION_URL':'activate/{uid}/{token}',
+    'SEND_CONFIRMATION_EMAIL':True,
+    'PASSWORD_RESET_CONFIRM_URL':'password_reset/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_RETYPE':True,
+    'USERNAME_RESET_SHOW_EMAIL_NOT_FOUND':True,
+    'SET_PASSWORD_RETYPE':True,
+    'SERIALIZERS':{
+        "user_create":"account.serializers.CustomUserCreateSerializer"
+    }
+}
+
+
