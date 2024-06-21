@@ -8,4 +8,4 @@ django：drf序列化，jwt验证，celery，支付宝沙盒，邮箱验证配�
 
 vue：vuex状态管理，axios相应后端接口，路由配置，tailwind编写样式
 
-![首页](\imga\首页.png)
+![首页](imga\首页.png)
